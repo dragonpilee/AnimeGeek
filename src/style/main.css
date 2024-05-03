@@ -1,0 +1,11 @@
+body::-webkit-scrollbar {
+  width: 5px;
+  background-color: var(--chakra-colors-gray-800);
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: var(--chakra-colors-gray-400);
+}
+.content {
+  padding: 20px 10px;
+}
