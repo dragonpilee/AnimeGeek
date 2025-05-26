@@ -5,7 +5,6 @@
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-green)
 ![Express](https://img.shields.io/badge/API-Express-lightgrey)
 ![Vite](https://img.shields.io/badge/Build-Vite-purple)
-![Axios](https://img.shields.io/badge/Client-Axios-blueviolet)
 ![HLS.js](https://img.shields.io/badge/Streaming-HLS.js-orange)
 ![dotenv](https://img.shields.io/badge/Env-dotenv-yellowgreen)
 ![ESLint](https://img.shields.io/badge/Code%20Quality-ESLint-yellow)
