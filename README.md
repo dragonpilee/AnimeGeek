@@ -1,136 +1,129 @@
-# AnimeGeek 
+# AnimeGeek
 
-AnimeGeek is a streaming platform dedicated to Anime with English subtitles. It provides a seamless experience for anime enthusiasts to discover, watch,download and enjoy their favorite shows.
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Chakra UI](https://img.shields.io/badge/UI-Chakra--UI-teal)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-green)
+![Express](https://img.shields.io/badge/API-Express-lightgrey)
+![Vite](https://img.shields.io/badge/Build-Vite-purple)
+![Axios](https://img.shields.io/badge/Client-Axios-blueviolet)
+![HLS.js](https://img.shields.io/badge/Streaming-HLS.js-orange)
+![dotenv](https://img.shields.io/badge/Env-dotenv-yellowgreen)
+![ESLint](https://img.shields.io/badge/Code%20Quality-ESLint-yellow)
+
+AnimeGeek is a streaming platform dedicated to anime with English subtitles. It provides a seamless experience for anime enthusiasts to discover, watch, download, and enjoy their favorite shows.
+
+> **Developed by Alan Cyril Sunny**  
+> If you enjoy this project, please ⭐ [star the repository](https://github.com/dragonpilee/anime-geek) — it really helps!
+
+---
 
 ## Features
 
-- **Extensive Anime Library**: Access a vast collection of Japanese anime series and movies.
-- **English Subtitles**: All content is available with English subtitles for non-Japanese speaking users.
-- **Responsive Design**: Enjoy a smooth viewing experience across various devices, including desktops, tablets, and mobile phones.
-- **Search and Filter**: Easily find anime titles using the search feature or filter by genre, release date, popularity, and more.
-- **User-Friendly Interface**: Intuitive interface designed for easy navigation and user interaction.
-- **High-Quality Streaming**: Enjoy high-definition streaming with fast loading times.
+- **Extensive Anime Library**: Access a vast collection of anime series and movies.
+- **English Subtitles**: All content includes English subtitles.
+- **Responsive Design**: Optimized for desktops, tablets, and mobile.
+- **Search and Filter**: Discover anime by genre, date, or popularity.
+- **User-Friendly Interface**: Clean and intuitive navigation.
+- **High-Quality Streaming**: Fast-loading, high-definition content.
 
-## Future Enhancement: English Audio with English Subtitles
+---
 
-### Features:
+## Future Enhancement: English Audio with Subtitles
 
-1. **Dual Audio Support**: Allow users to switch between Japanese audio with English subtitles and English audio with English subtitles for supported content.
+Planned features:
 
-2. **Language Preferences**: Implement a user profile system where users can set their preferred language for audio and subtitles.
+- **Dual Audio Support**
+- **User Language Preferences**
+- **Audio/Sub Selection**
+- **Backend/Player Integration**
+- **Testing & Optimization**
 
-3. **Audio and Subtitle Selection**: Provide options for users to select their preferred audio track and subtitle language while watching an anime.
-
-### Implementation Steps:
-
-1. **Content Licensing**: Ensure proper licensing agreements are in place to legally provide anime with English audio tracks.
-
-2. **Media Encoding**: Convert anime episodes or movies into formats that support multiple audio tracks and subtitles.
-
-3. **UI/UX Changes**: Update the user interface to accommodate language selection options, both for audio and subtitles. This may include dropdown menus or settings panels.
-
-4. **Backend Changes**: Modify backend APIs to handle requests for fetching specific audio tracks and subtitle files.
-
-5. **Player Integration**: Integrate a media player that supports switching between multiple audio tracks and subtitles seamlessly.
-
-6. **Testing**: Thoroughly test the feature across different devices and platforms to ensure compatibility and smooth user experience.
-
-### Considerations:
-
-- **Bandwidth Optimization**: Provide options for users to adjust streaming quality to conserve bandwidth while streaming content with dual audio and subtitles.
-
-- **Content Availability**: Inform users about the availability of English audio and subtitles for each anime title.
-
-- **User Feedback**: Gather feedback from users to continuously improve the feature and address any issues or concerns.
+---
 
 ## Tech Stack
 
-- **Frontend**:
-  - [React](https://reactjs.org/)
-  - [Chakra UI](https://chakra-ui.com/)
-  - [React Router](https://reactrouter.com/)
-  - [React Responsive Carousel](https://www.npmjs.com/package/react-responsive-carousel)
-- **Backend**:
-  - [Node.js](https://nodejs.org/)
-  - [Express](https://expressjs.com/)
-- **Video Streaming**:
-  - [HLS.js](https://github.com/video-dev/hls.js/)
-- **HTTP Client**:
-  - [Axios](https://axios-http.com/)
-- **Development Tools**:
-  - [Vite](https://vitejs.dev/)
-  - [ESLint](https://eslint.org/)
-  - [dotenv](https://www.npmjs.com/package/dotenv)
+### Frontend
+
+- [React](https://reactjs.org/)
+- [Chakra UI](https://chakra-ui.com/)
+- [React Router](https://reactrouter.com/)
+- [React Responsive Carousel](https://www.npmjs.com/package/react-responsive-carousel)
+
+### Backend
+
+- [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com/)
+
+### Streaming
+
+- [HLS.js](https://github.com/video-dev/hls.js/)
+
+### Tools
+
+- [Axios](https://axios-http.com/)
+- [Vite](https://vitejs.dev/)
+- [ESLint](https://eslint.org/)
+- [dotenv](https://www.npmjs.com/package/dotenv)
+
+---
 
 ## API Used
 
-### 1. List Anime
+### Trending Anime
+```
+https://march-api1.vercel.app/meta/anilist/trending?provider=gogoanime
+```
 
-- **Trending**:
-  - `https://march-api1.vercel.app/meta/anilist/trending?provider=gogoanime`
-- **Popular**:
-  - `https://march-api1.vercel.app/meta/anilist/popular?provider=gogoanime&perPage=20`
+### Popular Anime
+```
+https://march-api1.vercel.app/meta/anilist/popular?provider=gogoanime&perPage=20
+```
 
-    a. Card
-    b. Text
+### Anime Details & Recommendations
+```
+https://march-api1.vercel.app/meta/anilist/info/20954?fetchFiller=true&dub=false
+```
 
-### 2. Detail Anime & Recommendation
+### Streaming
+```
+https://march-api1.vercel.app/meta/anilist/watch/koe-no-katachi-movie-episode-1?provider=gogoanime
+```
 
-- **Detail Anime**:
-  - `https://march-api1.vercel.app/meta/anilist/info/20954?fetchFiller=true&dub=false`
-
-    a. Card
-    b. Text
-    c. Carousel (recommendation)
-
-- **Streaming Anime**:
-  - `https://march-api1.vercel.app/meta/anilist/watch/koe-no-katachi-movie-episode-1?provider=gogoanime`
-
-    a. Card
-    b. Text
-    c. Library Video
+---
 
 ## Getting Started
 
-To get a local copy up and running, follow these simple steps:
-
-1. **Clone the repository**:
+1. **Clone the repository**  
    ```bash
-   git clone https://github.com/your-username/anime-geek.git
+   git clone https://github.com/dragonpilee/anime-geek.git
    cd anime-geek
+   ```
 
-2. **Install dependencies**:
-    ```bash
-
-   npm install
-3. **Set up environment variables**:
-    Create a .env file in the root directory.
-   
-    Define environment variables required for your application.
-4. **Run the development server**:
-  
+2. **Install dependencies**  
    ```bash
+   npm install
+   ```
 
-    npm start
+3. **Environment Variables**  
+   Create a `.env` file and define your config variables.
 
-5. **Open your browser**:
+4. **Start the development server**  
+   ```bash
+   npm start
+   ```
 
-    Visit http://localhost:3000 to view the application.
+5. **Open in browser**  
+   Visit [http://localhost:3000](http://localhost:3000)
 
+---
 
+## Contributing
 
-Contributions are welcome! Feel free to open issues or pull requests for any improvements or features you'd like to add.
+Contributions are welcome!  
+Feel free to fork the repo, submit pull requests, or open issues.
 
-License
-This project is licensed under the MIT License.
+---
 
+## License
 
-
-
-
-
-
-
-
-
-
+This project is licensed under the [MIT License](LICENSE).
