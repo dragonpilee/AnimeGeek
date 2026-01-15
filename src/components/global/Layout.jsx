@@ -12,6 +12,7 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
+import ProviderSelector from "./ProviderSelector";
 
 const Layout = ({ children }) => {
   const [search, setSearch] = useState("");
@@ -96,6 +97,7 @@ const Layout = ({ children }) => {
               </InputRightElement>
             </InputGroup>
           </Box>
+          <ProviderSelector showLabel={false} size="md" />
         </Flex>
       </Box>
       <Box className="content" minH="100vh" px={6} py={8}>

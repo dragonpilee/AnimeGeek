@@ -11,9 +11,11 @@ import useResponsive from "../../hooks/useResponsive";
 import ErrorPage from "../global/ErrorPage";
 import imageError from "../../assets/image_error.png";
 import HorizontalScroll from "../global/HorizontalScroll";
+import useProvider from "../../hooks/useProvider";
 
 const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
   const { sm } = useResponsive();
+  const { currentProvider } = useProvider();
 
   const navigate = useNavigate();
 
@@ -25,9 +27,17 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
     return page.get("page");
   }, [page]);
 
-  const { data, loading, error, refetch } = useFetchData(
-    `${path}${pageValue ? `?page=${pageValue}` : ""}`
-  );
+  // Construct API path with provider parameter
+  const apiPath = useMemo(() => {
+    const separator = path.includes("?") ? "&" : "?";
+    const providerParam = `provider=${currentProvider}`;
+    const pageParam = pageValue ? `&page=${pageValue}` : "";
+    
+    // Add provider parameter and page if needed
+    return `${path}${separator}${providerParam}${pageParam}`;
+  }, [path, pageValue, currentProvider]);
+
+  const { data, loading, error, refetch } = useFetchData(apiPath);
 
   const arrDatas = useMemo(() => {
     if (!loading && data) {

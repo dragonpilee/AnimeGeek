@@ -1,4 +1,4 @@
-import { Button, Heading, Stack } from "@chakra-ui/react";
+import { Button, Heading, Stack, Text, Box } from "@chakra-ui/react";
 import formatWord from "../../../helpers/formatWord";
 import { useEpisodeAnimeContext } from "./EpisodesAnimeContextProvider";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -52,18 +52,22 @@ const EpisodesAnimeStreamingModal = () => {
   useEffect(() => {
     if (hlsInstance) {
       const updateTracks = () => {
-        setAudioTracks(
-          hlsInstance.audioTracks.map((track, index) => ({
-            label: track.name,
-            value: index,
-          }))
-        );
-        setSubtitleTracks(
-          hlsInstance.subtitleTracks.map((track, index) => ({
-            label: track.name,
-            value: index,
-          }))
-        );
+        if (hlsInstance.audioTracks) {
+          setAudioTracks(
+            hlsInstance.audioTracks.map((track, index) => ({
+              label: track.name || `Audio ${index + 1}`,
+              value: index,
+            }))
+          );
+        }
+        if (hlsInstance.subtitleTracks) {
+          setSubtitleTracks(
+            hlsInstance.subtitleTracks.map((track, index) => ({
+              label: track.name || `Subtitle ${index + 1}`,
+              value: index,
+            }))
+          );
+        }
       };
 
       hlsInstance.on(Hls.Events.MANIFEST_PARSED, updateTracks);
@@ -77,6 +81,16 @@ const EpisodesAnimeStreamingModal = () => {
       };
     }
   }, [hlsInstance]);
+
+  // Re-initialize video when dataStream changes and modal is open
+  useEffect(() => {
+    if (isStreamOpen && dataStream?.sources?.length > 0 && videoRef?.current && !hlsInstance) {
+      // Video source might have changed, ensure it's loaded
+      if (videoRef.current.src && videoRef.current.src !== dataStream.sources[0]?.url) {
+        // Source changed, will be handled by context provider
+      }
+    }
+  }, [isStreamOpen, dataStream, hlsInstance]);
 
   const handleAudioChange = (index) => {
     if (hlsInstance && index !== "") {
@@ -104,7 +118,59 @@ const EpisodesAnimeStreamingModal = () => {
       size="xl"
     >
       <Stack direction="column" spacing={5}>
-        <video ref={videoRef} controls />
+        {/* Always show video element - it will load when sources are available */}
+        <Box
+          position="relative"
+          width="100%"
+          bg="black"
+          borderRadius="8px"
+          overflow="hidden"
+          minH="400px"
+          maxH="70vh"
+        >
+          <video 
+            ref={videoRef} 
+            controls 
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#000",
+              display: "block"
+            }}
+            playsInline
+            preload="metadata"
+            crossOrigin="anonymous"
+          />
+          {(!dataStream?.sources || dataStream.sources.length === 0) && (
+            <Stack 
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+              align="center" 
+              justify="center"
+              spacing={3}
+              zIndex={10}
+            >
+              {dataStream?.error ? (
+                <>
+                  <Text color="red.300" fontSize="lg" fontWeight="bold">Error Loading Stream</Text>
+                  <Text color="gray.300" fontSize="sm" textAlign="center" px={4}>
+                    {dataStream.error}
+                  </Text>
+                  <Text color="gray.400" fontSize="xs" textAlign="center" px={4} mt={2}>
+                    Trying other providers automatically...
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text color="white" fontSize="lg">Loading video player...</Text>
+                  <Text color="gray.300" fontSize="sm">Fetching stream sources...</Text>
+                </>
+              )}
+            </Stack>
+          )}
+        </Box>
         <Stack direction="row" spacing={5}>
           {audioTracks.length > 1 && (
             <Select

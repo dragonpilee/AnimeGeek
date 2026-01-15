@@ -5,6 +5,8 @@ import useFetchData from "../hooks/useFetchData";
 import Loading from "../components/global/Loading";
 import useChangeDocTitle from "../hooks/useChangeDocTitle";
 import Box from "../components/global/Box";
+import { DEFAULT_PROVIDER } from "../constants";
+import useProvider from "../hooks/useProvider";
 
 const CoverAnime = lazy(() =>
   import("../components/detail-anime/cover-anime/CoverAnime")
@@ -30,15 +32,25 @@ const TitleAnime = lazy(() =>
 
 const DetailAnime = () => {
   const { id, anime_name } = useParams();
-  const { state } = useLocation();
+  const { state, pathname } = useLocation();
+  const { currentProvider } = useProvider();
 
-  const { data: detailData, loading } = useFetchData(`/info/${id}`);
+  const { data: detailData, loading } = useFetchData(`/info/${id}?fetchFiller=true&dub=false&provider=${currentProvider}`);
 
   useChangeDocTitle(`AnimeGeek | ${decodeURI(anime_name)}`);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+  }, [pathname]);
+
+  // Debug: Log data structure
+  useEffect(() => {
+    if (detailData) {
+      console.log("Anime Detail Data:", detailData);
+      console.log("Episodes:", detailData.episodes);
+      console.log("Seasons:", detailData.seasons);
+    }
+  }, [detailData]);
 
   return (
     <Stack direction="column" spacing={10}>
@@ -66,7 +78,8 @@ const DetailAnime = () => {
             <DescriptionAnime data={detailData} />
           </Box>
 
-          <Box showIf={detailData?.episodes?.length > 0} useSuspense>
+          {/* Always show Episodes component - it will handle empty state internally */}
+          <Box useSuspense>
             <EpisodesAnime data={detailData} />
           </Box>
 

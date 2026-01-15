@@ -1,10 +1,39 @@
-version: '3.8'
-
 services:
+  # Frontend Application
   animegeek:
-    build: .
+    build:
+      context: .
+      args:
+        # Set your Consumet API instance URL here
+        # If using the optional consumet-api service below, use: http://consumet-api:3000/meta/anilist
+        # Otherwise, use your own instance or the public one
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://consumet-instance.vercel.app/meta/anilist}
+        VITE_ANIME_PROVIDER: ${VITE_ANIME_PROVIDER:-gogoanime}
     ports:
-      - "3000:80"
+      - "${PORT:-3000}:80"
     container_name: animegeek
     image: animegeek
-    restart: always
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - animegeek-network
+
+  # Optional: Self-hosted Consumet API
+  # Uncomment the section below if you want to run your own Consumet API instance
+  # consumet-api:
+  #   image: riimuru/consumet-api:latest
+  #   container_name: consumet-api
+  #   ports:
+  #     - "3001:3000"
+  #   restart: unless-stopped
+  #   environment:
+  #     - NODE_ENV=PROD
+  #   networks:
+  #     - animegeek-network
+  #   # Uncomment the line below and update VITE_API_BASE_URL in animegeek service
+  #   # to use this local instance instead of the public one
+
+networks:
+  animegeek-network:
+    driver: bridge

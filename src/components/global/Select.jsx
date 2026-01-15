@@ -1,7 +1,7 @@
 import { Input, Select as SelectChakra, Stack } from "@chakra-ui/react";
 import useResponsive from "../../hooks/useResponsive";
 import Drawer from "./Drawer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "./Box";
 
 /**
@@ -19,10 +19,17 @@ import Box from "./Box";
  * @param {AddPropsSelect & import("@chakra-ui/react").SelectProps} param0
  * @returns
  */
-const Select = ({ listOptions, placeholder = "Select One", ...props }) => {
+const Select = ({ listOptions, placeholder = "Select One", value, ...props }) => {
   const { sm } = useResponsive();
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [valueSelected, setValueSelected] = useState("");
+  const [valueSelected, setValueSelected] = useState(value || "");
+  
+  // Update valueSelected when value prop changes
+  useEffect(() => {
+    if (value !== undefined) {
+      setValueSelected(value);
+    }
+  }, [value]);
 
   if (sm) {
     return (
@@ -33,7 +40,7 @@ const Select = ({ listOptions, placeholder = "Select One", ...props }) => {
             setOpenDrawer(true);
           }}
           readOnly
-          value={listOptions?.find((d) => d?.value === valueSelected)?.label}
+          value={listOptions?.find((d) => d?.value === valueSelected)?.label || ""}
         />
         <Drawer
           placement="bottom"
@@ -70,8 +77,10 @@ const Select = ({ listOptions, placeholder = "Select One", ...props }) => {
   return (
     <SelectChakra
       placeholder={placeholder}
+      value={valueSelected}
       {...props}
       onChange={({ target: { value } }) => {
+        setValueSelected(value);
         if (props.onChange) {
           props.onChange(value);
         }
