@@ -1,6 +1,5 @@
-import { Card, CardBody, CardFooter, CardHeader } from "@chakra-ui/react";
+import { Card, CardBody, CardFooter, CardHeader, Box } from "@chakra-ui/react";
 import useResponsive from "../../hooks/useResponsive";
-import "../../style/card.css";
 
 /**
  * @typedef AddPropsCard
@@ -21,15 +20,23 @@ const CardData = ({
 
   return (
     <Card
-      {...(!useDefault && {
-        className: "_card",
-      })}
+      bg="dark.surface"
+      borderRadius="8px"
+      overflow="hidden"
+      border="1px solid"
+      borderColor="dark.border"
+      transition="all 0.3s ease"
+      _hover={{
+        transform: "translateY(-4px)",
+        boxShadow: "0 8px 24px rgba(244, 117, 33, 0.3)",
+        borderColor: "brand.500",
+      }}
       {...props}
     >
       {header && <CardHeader>{header}</CardHeader>}
-      <CardBody>{children}</CardBody>
+      <CardBody p={0}>{children}</CardBody>
       {footer && (
-        <CardFooter {...(!sm && { py: "var(--chakra-space-5)" })} px={0}>
+        <CardFooter {...(!sm && { py: "var(--chakra-space-5)" })} px={3}>
           {footer}
         </CardFooter>
       )}

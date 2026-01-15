@@ -14,6 +14,8 @@ const videoHLS = ({ refCurrent, srcVideo }) => {
     hls.on(Hls.Events.MANIFEST_PARSED, function () {
       refCurrent?.play();
     });
+    return hls;
   }
+  return null;
 };
 export default videoHLS;

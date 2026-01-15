@@ -1,4 +1,4 @@
-import { IconButton, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import { IconButton, Stack, Text, Box } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useFetchData from "../../hooks/useFetchData";
@@ -10,6 +10,7 @@ import CardAnime from "./card-anime/CardAnime";
 import useResponsive from "../../hooks/useResponsive";
 import ErrorPage from "../global/ErrorPage";
 import imageError from "../../assets/image_error.png";
+import HorizontalScroll from "../global/HorizontalScroll";
 
 const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
   const { sm } = useResponsive();
@@ -31,7 +32,7 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
   const arrDatas = useMemo(() => {
     if (!loading && data) {
       if (useExploreMore) {
-        return data?.results?.slice(0, 3);
+        return data?.results?.slice(0, 10);
       }
       return data?.results;
     }
@@ -42,20 +43,42 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
   }, [location?.search]);
 
   return (
-    <Stack spacing={10} direction="column">
-      <Stack direction="row">
-        {!useExploreMore && (
+    <Stack spacing={6} direction="column">
+      <Stack
+        direction={{ base: "column", sm: "row" }}
+        alignItems={{ base: "flex-start", sm: "center" }}
+        justifyContent="space-between"
+        spacing={{ base: 2, sm: 0 }}
+      >
+        <Stack direction="row" alignItems="center">
+          {!useExploreMore && (
+            <IconButton
+              borderRadius={"full"}
+              icon={<HomeIcon />}
+              colorScheme="brand"
+              variant="ghost"
+              size={{ base: "sm", md: "md" }}
+              onClick={() => navigate("/")}
+            />
+          )}
+          <Text
+            as="h2"
+            fontSize={{ base: "lg", sm: "xl", md: "2xl", lg: "3xl" }}
+            fontWeight="bold"
+          >
+            {titlePage}
+          </Text>
+        </Stack>
+        {useExploreMore && (
           <IconButton
-            borderRadius={"full"}
-            icon={<HomeIcon />}
-            colorScheme="teal"
-            variant="outline"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(path)}
+            colorScheme="brand"
+            aria-label="View All"
+            size={{ base: "sm", md: "md" }}
+            variant="ghost"
+            icon={<ArrowForwardIcon />}
           />
         )}
-        <Text as="h2" fontSize={sm ? "2xl" : "4xl"} fontWeight="bold">
-          {titlePage}
-        </Text>
       </Stack>
       {error ? (
         <ErrorPage
@@ -65,7 +88,7 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
             },
             text: "Refresh",
           }}
-          title="Erorr"
+          title="Error"
           subTitle={error}
           src={imageError}
         />
@@ -74,30 +97,22 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
           {loading ? (
             <Loading />
           ) : (
-            <Stack direction="column" spacing={10}>
+            <Stack direction="column" spacing={6}>
               {arrDatas?.length ? (
                 <>
-                  <SimpleGrid columns={sm ? 1 : 2} gap={10} alignItems="center">
+                  <HorizontalScroll>
                     {arrDatas?.map((item, key) => (
-                      <CardAnime data={item} key={key} />
+                      <Box
+                        key={key}
+                        minW={{ base: "160px", sm: "180px", md: "200px", lg: "220px" }}
+                        maxW={{ base: "160px", sm: "180px", md: "200px", lg: "220px" }}
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
+                      >
+                        <CardAnime data={item} />
+                      </Box>
                     ))}
-
-                    {useExploreMore && (
-                      <IconButton
-                        onClick={() => navigate(path)}
-                        colorScheme="teal"
-                        aria-label="More Explore"
-                        size="lg"
-                        variant="outline"
-                        borderRadius="full"
-                        width={sm ? "full" : 100}
-                        height={100}
-                        fontSize={36}
-                        margin="auto"
-                        icon={<ArrowForwardIcon />}
-                      />
-                    )}
-                  </SimpleGrid>
+                  </HorizontalScroll>
                   <div>
                     {!useExploreMore && data?.hasNextPage && (
                       <PaginationListAnime

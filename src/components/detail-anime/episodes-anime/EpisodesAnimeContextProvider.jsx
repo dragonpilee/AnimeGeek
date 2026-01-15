@@ -45,6 +45,7 @@ const EpisodesAnimeContextProvider = ({ data, children }) => {
     download: "",
     sources: [],
   });
+  const [hlsInstance, setHlsInstance] = useState(null);
 
   const episodeValParam = useMemo(() => {
     return episodeParam?.get("episode");
@@ -53,10 +54,14 @@ const EpisodesAnimeContextProvider = ({ data, children }) => {
   const getStreamLink = () => {
     axios.get(`${BASE_API}/watch/${episodeValParam}`)?.then(({ data }) => {
       if (data) {
-        videoHLS({
+        if (hlsInstance) {
+          hlsInstance.destroy();
+        }
+        const newHls = videoHLS({
           refCurrent: videoRef?.current,
           srcVideo: data?.sources[0]?.url,
         });
+        setHlsInstance(newHls);
         setDataStream((prev) => ({
           ...prev,
           download: data?.download,
@@ -78,6 +83,10 @@ const EpisodesAnimeContextProvider = ({ data, children }) => {
 
   const closeModalVideo = () => {
     setIsStreamOpen(false);
+    if (hlsInstance) {
+      hlsInstance.destroy();
+      setHlsInstance(null);
+    }
 
     episodeParam.delete("episode");
     setEpisodeParam(episodeParam);
@@ -100,6 +109,7 @@ const EpisodesAnimeContextProvider = ({ data, children }) => {
         isStreamOpen,
         episodeValParam,
         dataStream,
+        hlsInstance,
       }}
     >
       {children}

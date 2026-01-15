@@ -4,11 +4,14 @@ import {
   InputGroup,
   InputLeftElement,
   Stack,
+  Heading,
+  Flex,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
-import Image from "./Image";
 
 const Layout = ({ children }) => {
   const [search, setSearch] = useState("");
@@ -16,49 +19,90 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
 
   const searchHandler = () => {
-    searchParam?.set("q", search);
-    setSearchParam(searchParam);
-    navigate(`/search/?q=${search}`);
+    if (search.trim()) {
+      searchParam?.set("q", search);
+      setSearchParam(searchParam);
+      navigate(`/search/?q=${search}`);
+    }
   };
 
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack direction="column" spacing={0}>
       <Box
         position="sticky"
         top={0}
         zIndex={99}
-        bgColor="var(--chakra-colors-chakra-body-bg)"
+        bg="dark.bgAlt"
+        borderBottom="1px solid"
+        borderColor="dark.border"
+        boxShadow="0 2px 8px rgba(0,0,0,0.3)"
       >
-        <Stack direction="row" alignItems="center">
-          <Box
+        <Flex
+          maxW="1400px"
+          mx="auto"
+          px={6}
+          py={4}
+          alignItems="center"
+          gap={6}
+          direction={{ base: "column", md: "row" }}
+        >
+          <Heading
+            as="h1"
+            size="lg"
             cursor="pointer"
-            onClick={() => {
-              navigate("/");
-            }}
+            onClick={() => navigate("/")}
+            color="brand.500"
+            fontWeight="700"
+            letterSpacing="tight"
+            _hover={{ color: "brand.400" }}
+            transition="color 0.2s"
+            whiteSpace="nowrap"
           >
-            <Image src="/icon.png" boxSize={20} />
-          </Box>
-          <Box style={{ width: "100%" }}>
-            <InputGroup>
+            AnimeGeek
+          </Heading>
+          <Box flex="1" w="full">
+            <InputGroup size="lg">
               <InputLeftElement>
-                <SearchIcon />
+                <SearchIcon color="brand.500" />
               </InputLeftElement>
               <Input
                 type="search"
-                onChange={({ target: { value } }) => {
-                  setSearch(value);
+                placeholder="Search for anime..."
+                bg="dark.surface"
+                border="2px solid"
+                borderColor="dark.border"
+                fontSize="md"
+                _hover={{ borderColor: "brand.500" }}
+                _focus={{
+                  borderColor: "brand.500",
+                  boxShadow: "0 0 0 1px var(--chakra-colors-brand-500)",
                 }}
+                onChange={({ target: { value } }) => setSearch(value)}
                 onKeyUp={(e) => {
                   if (e?.code === "Enter" || e?.key === "Enter") {
                     searchHandler();
                   }
                 }}
               />
+              <InputRightElement>
+                <IconButton
+                  icon={<SearchIcon />}
+                  size="sm"
+                  colorScheme="brand"
+                  variant="ghost"
+                  onClick={searchHandler}
+                  aria-label="Search"
+                />
+              </InputRightElement>
             </InputGroup>
           </Box>
-        </Stack>
+        </Flex>
       </Box>
-      <Box className="content">{children}</Box>
+      <Box className="content" minH="100vh" px={6} py={8}>
+        <Box maxW="1400px" mx="auto">
+          {children}
+        </Box>
+      </Box>
     </Stack>
   );
 };

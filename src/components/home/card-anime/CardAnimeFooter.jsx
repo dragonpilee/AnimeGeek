@@ -1,58 +1,49 @@
 import {
   IconButton,
-  SimpleGrid,
   Stack,
   Tag,
   Text,
   Tooltip,
+  Wrap,
 } from "@chakra-ui/react";
 import VideoIcon from "../../../assets/custom-icons/VideoIcon";
 import CardAnimeModal from "./CardAnimeModal";
 import { useState } from "react";
-import useResponsive from "../../../hooks/useResponsive";
 
 const CardAnimeFooter = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { sm } = useResponsive();
-
   return (
-    <Stack
-      direction={sm ? "column" : "row"}
-      wrap
-      justifyContent="space-between"
-      width="100%"
-      alignItems="center"
-    >
-      <SimpleGrid columns={3} spacing={5}>
-        {data?.genres?.map((genre, idx) => (
-          <Tag key={idx}>{genre}</Tag>
+    <Stack spacing={2} width="100%">
+      <Wrap spacing={2}>
+        {data?.genres?.slice(0, 3).map((genre, idx) => (
+          <Tag key={idx} size="sm" bg="brand.500" color="white">
+            {genre}
+          </Tag>
         ))}
-      </SimpleGrid>
+      </Wrap>
 
-      <Stack direction="row">
-        <Text>{data?.type}</Text>
-        <Text>•</Text>
-        <Text>{data?.totalEpisodes} Episodes</Text>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Text fontSize="sm" color="gray.400">
+          {data?.type} • {data?.totalEpisodes} Eps
+        </Text>
+
+        {data?.trailer?.id && (
+          <Tooltip label="Trailer" hasArrow>
+            <IconButton
+              size="sm"
+              borderRadius="full"
+              icon={<VideoIcon />}
+              colorScheme="brand"
+              variant="ghost"
+              onClick={(e) => {
+                e?.preventDefault();
+                setIsOpen(true);
+              }}
+            />
+          </Tooltip>
+        )}
       </Stack>
-
-      {data?.trailer?.id && (
-        <Tooltip label="Trailer" hasArrow>
-          <IconButton
-            borderRadius="full"
-            borderWidth={0}
-            icon={<VideoIcon />}
-            colorScheme="teal"
-            size="lg"
-            variant="outline"
-            style={{ color: "white" }}
-            onClick={(e) => {
-              e?.preventDefault();
-              setIsOpen(true);
-            }}
-          />
-        </Tooltip>
-      )}
       <CardAnimeModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

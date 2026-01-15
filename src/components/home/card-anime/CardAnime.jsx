@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import CardAnimeFooter from "./CardAnimeFooter";
 import CardData from "../../global/CardData";
 import CardAnimeContent from "./CardAnimeContent";
-import "../../../style/card.css";
+import { Box } from "@chakra-ui/react";
 
 const CardAnime = ({ data }) => {
   const { pathname, search } = useLocation();
@@ -19,9 +19,11 @@ const CardAnime = ({ data }) => {
         prevPath: `${pathname}${search}`,
       }}
     >
-      <CardData className="_card" footer={<CardAnimeFooter data={data} />}>
-        <CardAnimeContent data={data} />
-      </CardData>
+      <Box role="group">
+        <CardData footer={<CardAnimeFooter data={data} />}>
+          <CardAnimeContent data={data} />
+        </CardData>
+      </Box>
     </Link>
   );
 };

@@ -1,4 +1,4 @@
-export const BASE_API = import.meta.env.VITE_BASE_API;
+export const BASE_API = "https://consumet-instance.vercel.app/meta/anilist";
 
 export const ROLES = {
   MAIN: "teal",
