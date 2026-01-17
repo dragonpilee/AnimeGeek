@@ -6,7 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme.js";
 import Layout from "./components/global/Layout.jsx";
 import "./style/main.css";
-import "./style/crunchyroll.css";
+
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ErrorBoundary from "./components/global/ErrorBoundary.jsx";
 import FallbackErr from "./pages/FallbackErr.jsx";
