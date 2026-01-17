@@ -8,7 +8,7 @@ import {
   Flex,
   InputRightElement,
   IconButton,
-  Text,
+  Text as ChakraText,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
@@ -88,7 +88,7 @@ const Layout = ({ children }) => {
           </Box>
 
           <Flex gap={6} alignItems="center">
-            <Text
+            <ChakraText
               cursor="pointer"
               fontWeight="600"
               fontSize="sm"
@@ -96,8 +96,8 @@ const Layout = ({ children }) => {
               onClick={() => navigate("/")}
             >
               Home
-            </Text>
-            <Text
+            </ChakraText>
+            <ChakraText
               cursor="pointer"
               fontWeight="600"
               fontSize="sm"
@@ -105,7 +105,7 @@ const Layout = ({ children }) => {
               onClick={() => navigate("/search")}
             >
               Browse
-            </Text>
+            </ChakraText>
             <IconButton
               display={{ base: "flex", md: "none" }}
               icon={<SearchIcon />}
@@ -125,9 +125,9 @@ const Layout = ({ children }) => {
 
       {/* Footer (Optional, but good for space) */}
       <Box py={10} textAlign="center" borderTop="1px solid rgba(255, 255, 255, 0.05)">
-        <Text color="gray.500" fontSize="xs">
+        <ChakraText color="gray.500" fontSize="xs">
           © {new Date().getFullYear()} CINEBY ANIME. All rights reserved.
-        </Text>
+        </ChakraText>
       </Box>
     </Box>
   );
