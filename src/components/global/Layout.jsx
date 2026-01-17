@@ -59,7 +59,7 @@ const Layout = ({ children }) => {
             transition="all 0.2s"
             className="text-shadow"
           >
-            CINEBY <Box as="span" color="white" fontWeight="300" fontSize="md" ml={1}>ANIME</Box>
+            CINEGEEK <Box as="span" color="white" fontWeight="300" fontSize="md" ml={1}>ANIME</Box>
           </Heading>
 
           <Box flex="1" maxW="600px" display={{ base: "none", md: "block" }}>
@@ -126,7 +126,7 @@ const Layout = ({ children }) => {
       {/* Footer (Optional, but good for space) */}
       <Box py={10} textAlign="center" borderTop="1px solid rgba(255, 255, 255, 0.05)">
         <ChakraText color="gray.500" fontSize="xs">
-          © {new Date().getFullYear()} CINEBY ANIME. All rights reserved.
+          © {new Date().getFullYear()} CINEGEEK ANIME. All rights reserved.
         </ChakraText>
       </Box>
     </Box>

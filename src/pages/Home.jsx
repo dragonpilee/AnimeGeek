@@ -4,7 +4,7 @@ import Hero from "../components/home/Hero";
 import useChangeDocTitle from "../hooks/useChangeDocTitle";
 
 const Home = () => {
-  useChangeDocTitle("CINEBY ANIME");
+  useChangeDocTitle("CINEGEEK ANIME");
 
   return (
     <Box>
