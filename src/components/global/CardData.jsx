@@ -21,22 +21,23 @@ const CardData = ({
   return (
     <Card
       bg="dark.surface"
-      borderRadius="8px"
+      borderRadius="4px" // Sharper corners for a cinematic look
       overflow="hidden"
       border="1px solid"
-      borderColor="dark.border"
-      transition="all 0.3s ease"
+      borderColor="rgba(255, 255, 255, 0.05)"
+      transition="all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
       _hover={{
-        transform: "translateY(-4px)",
-        boxShadow: "0 8px 24px rgba(244, 117, 33, 0.3)",
+        transform: "scale(1.05)",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.8), 0 0 10px rgba(229, 9, 20, 0.2)",
         borderColor: "brand.500",
+        zIndex: 10,
       }}
       {...props}
     >
       {header && <CardHeader>{header}</CardHeader>}
       <CardBody p={0}>{children}</CardBody>
       {footer && (
-        <CardFooter {...(!sm && { py: "var(--chakra-space-5)" })} px={3}>
+        <CardFooter px={3} py={3}>
           {footer}
         </CardFooter>
       )}

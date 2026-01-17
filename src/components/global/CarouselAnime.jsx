@@ -1,69 +1,69 @@
-import { useMemo } from "react";
-import { Carousel } from "react-responsive-carousel";
-import useResponsive from "../../hooks/useResponsive";
-import { Heading, SimpleGrid, Stack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Stack, Text, AspectRatio, Image as ChakraImage } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import BgImage from "./BgImage";
+import useResponsive from "../../hooks/useResponsive";
+import HorizontalScroll from "./HorizontalScroll";
+import formatWord from "../../helpers/formatWord";
+import Image from "./Image";
+import imageError from "../../assets/image_error.png";
 
-const CarouselAnime = ({ arrDatas, customChildren }) => {
+const CarouselAnime = ({ arrDatas }) => {
   const { sm } = useResponsive();
 
-  const dataPerSlide = useMemo(() => {
-    return sm ? 2 : 3;
-  }, [sm]);
-
-  /** Proses data untuk nampilin 3 or 2 anime per carousel
-   * 0 - 3 / 0 -2
-   * 3 - 6 / 2 - 4
-   */
-  const dataCarousel = useMemo(() => {
-    const tempData = [];
-    arrDatas?.forEach((_, idx) => {
-      tempData?.push(
-        arrDatas?.slice(idx * dataPerSlide, (idx + 1) * dataPerSlide)
-      );
-    });
-
-    return tempData?.filter((d) => d?.length > 0);
-  }, [arrDatas, sm]);
+  if (!arrDatas?.length) return null;
 
   return (
-    <Carousel
-      emulateTouch
-      showIndicators={false}
-      infiniteLoop
-      swipeable
-      autoPlay
-      showStatus={false}
-    >
-      {dataCarousel?.map((carData) => {
-        return (
-          <SimpleGrid
-            key={carData?.id}
-            columns={dataPerSlide}
-            spacing={sm ? 5 : 10}
-          >
-            {carData?.map((item) => {
-              if (customChildren) {
-                return customChildren(item);
-              }
-              return (
-                <Link key={item?.id} to={`/anime/${item?.id}/${item?.title}`}>
-                  <BgImage src={item?.cover} useOverlay height={300}>
-                    <Stack spacing={2} bottom={5} left={2} pos="absolute">
-                      <Heading as="h3" fontSize={sm ? "md" : "xl"}>
-                        {item?.title}
-                      </Heading>
-                      <Stack direction="row">{item?.subTitle}</Stack>
-                    </Stack>
-                  </BgImage>
-                </Link>
-              );
-            })}
-          </SimpleGrid>
-        );
-      })}
-    </Carousel>
+    <HorizontalScroll>
+      {arrDatas.map((item, key) => (
+        <Box
+          key={key}
+          minW={{ base: "140px", sm: "160px", md: "180px", lg: "200px" }}
+          maxW={{ base: "140px", sm: "160px", md: "180px", lg: "200px" }}
+          px={2}
+          role="group"
+          transition="transform 0.3s ease"
+        >
+          <Link to={`/anime/${item?.id}/${encodeURIComponent(item?.title)}`}>
+            <Box position="relative" overflow="hidden" borderRadius="md" border="1px solid" borderColor="rgba(255,255,255,0.05)">
+              <AspectRatio ratio={2 / 3}>
+                <Image
+                  src={item.image || item.cover}
+                  alt={item.title}
+                  fallbackSrc={imageError}
+                  objectFit="cover"
+                  transition="all 0.5s ease"
+                  _groupHover={{ transform: "scale(1.1)" }}
+                />
+              </AspectRatio>
+              {/* Hover Overlay */}
+              <Box
+                position="absolute"
+                inset={0}
+                bg="linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)"
+                opacity={0}
+                _groupHover={{ opacity: 1 }}
+                transition="opacity 0.3s ease"
+                display="flex"
+                flexDirection="column"
+                justifyContent="flex-end"
+                p={4}
+              >
+                <Text
+                  color="white"
+                  fontSize="xs"
+                  fontWeight="bold"
+                  noOfLines={2}
+                  className="text-shadow"
+                >
+                  {item.title}
+                </Text>
+                {item.subTitle}
+              </Box>
+            </Box>
+          </Link>
+        </Box>
+      ))}
+    </HorizontalScroll>
   );
 };
+
 export default CarouselAnime;

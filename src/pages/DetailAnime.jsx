@@ -77,50 +77,61 @@ const DetailAnime = () => {
   }, [detailData]);
 
   return (
-    <Stack direction="column" spacing={10}>
+    <Box position="relative">
+      {/* Back Button */}
       {state && (
-        <Link to={state?.prevPath}>
-          <Box>
-            <Button>Back</Button>
-          </Box>
-        </Link>
+        <Box
+          position="absolute"
+          top={4}
+          left={6}
+          zIndex={1001}
+        >
+          <Link to={state?.prevPath}>
+            <Button variant="glass" size="sm">
+              Back
+            </Button>
+          </Link>
+        </Box>
       )}
 
-      <Box useSuspense height={480}>
+      {/* Cinematic Cover/Backdrop */}
+      <Box useSuspense>
         <CoverAnime src={mappedData?.image} srcBg={mappedData?.cover} />
       </Box>
 
-      <Box useSuspense>
-        <TitleAnime data={mappedData} />
-      </Box>
+      {/* Content Section */}
+      <Stack spacing={12} position="relative" mt={{ base: 4, md: -12 }} pb={20}>
+        <Box useSuspense>
+          <TitleAnime data={mappedData} />
+        </Box>
 
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <Box useSuspense>
-            <DescriptionAnime data={mappedData} />
-          </Box>
+        {loading ? (
+          <Box py={20}><Loading /></Box>
+        ) : (
+          <Stack spacing={16}>
+            <Box useSuspense>
+              <DescriptionAnime data={mappedData} />
+            </Box>
 
-          {/* Always show Episodes component - it will handle empty state internally */}
-          <Box useSuspense>
-            <EpisodesAnime data={mappedData} />
-          </Box>
+            <Box useSuspense>
+              <EpisodesAnime data={mappedData} />
+            </Box>
 
-          <Box showIf={mappedData?.relations?.length > 0} useSuspense>
-            <RelationsAnime data={mappedData} />
-          </Box>
+            {mappedData?.characters?.length > 0 && (
+              <Box useSuspense>
+                <CharacterAnime data={mappedData} />
+              </Box>
+            )}
 
-          <Box showIf={mappedData?.characters?.length > 0} useSuspense>
-            <CharacterAnime data={mappedData} />
-          </Box>
-
-          <Box showIf={mappedData?.recommendations?.length > 0} useSuspense>
-            <RecommendationAnime data={mappedData} />
-          </Box>
-        </>
-      )}
-    </Stack>
+            {mappedData?.recommendations?.length > 0 && (
+              <Box useSuspense>
+                <RecommendationAnime data={mappedData} />
+              </Box>
+            )}
+          </Stack>
+        )}
+      </Stack>
+    </Box>
   );
 };
 export default DetailAnime;

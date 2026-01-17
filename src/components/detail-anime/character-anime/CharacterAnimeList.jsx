@@ -1,47 +1,46 @@
-import { Button, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react";
+import { Button, SimpleGrid, Stack, Text, Box, AspectRatio, Image as ChakraImage } from "@chakra-ui/react";
 import useResponsive from "../../../hooks/useResponsive";
-import BgImage from "../../global/BgImage";
-import { ROLES } from "../../../constants";
+import Image from "../../global/Image";
+import imageError from "../../../assets/image_error.png";
 
-/**
- *
- * @param {Object} props
- * @param {Object} props.data
- * @param {(char:String)=>void} props.onOpenVA
- * @returns {Element}
- */
 const CharacterAnimeList = ({ data, onOpenVA }) => {
   const { sm } = useResponsive();
 
+  if (!data?.characters?.length) return null;
+
   return (
-    <SimpleGrid columns={sm ? 2 : 5} spacing={10}>
-      {data?.characters?.map((char) => (
-        <Stack key={char?.id} spacing={sm ? 3 : 5}>
-          <BgImage
-            src={char?.image}
-            w={120}
-            h={120}
-            m="auto"
-            borderRadius="full"
-          />
+    <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 6 }} spacing={8}>
+      {data.characters.map((char) => (
+        <Stack key={char.id} spacing={4} role="group">
+          <Box borderRadius="lg" overflow="hidden" border="1px solid" borderColor="rgba(255,255,255,0.05)">
+            <AspectRatio ratio={1}>
+              <Image
+                src={char.image}
+                alt={char.name?.full}
+                fallbackSrc={imageError}
+                objectFit="cover"
+                transition="transform 0.5s ease"
+                _groupHover={{ transform: "scale(1.1)" }}
+              />
+            </AspectRatio>
+          </Box>
 
-          <Text textAlign="center">{char?.name?.full}</Text>
-
-          <Tag
-            textAlign="center"
-            display="block"
-            pt={1}
-            variant="outline"
-            colorScheme={ROLES[char?.role]}
-            borderRadius="full"
-          >
-            {char?.role}
-          </Tag>
+          <Stack spacing={1} textAlign="center">
+            <Text fontWeight="bold" fontSize="sm" noOfLines={1} color="white">
+              {char.name?.full}
+            </Text>
+            <Text fontSize="xs" color="brand.500" fontWeight="800" textTransform="uppercase" letterSpacing="widest">
+              {char.role}
+            </Text>
+          </Stack>
 
           <Button
-            onClick={() => {
-              onOpenVA(char);
-            }}
+            size="sm"
+            variant="glass"
+            borderRadius="full"
+            fontSize="xs"
+            onClick={() => onOpenVA(char)}
+            _groupHover={{ variant: "primary" }}
           >
             Voice Actors
           </Button>
@@ -50,4 +49,5 @@ const CharacterAnimeList = ({ data, onOpenVA }) => {
     </SimpleGrid>
   );
 };
+
 export default CharacterAnimeList;

@@ -1,51 +1,52 @@
-import { Alert, Heading, SimpleGrid, Text } from "@chakra-ui/react";
-import CardData from "../../global/CardData";
+import { Alert, Heading, SimpleGrid, Text, Stack, Box, AspectRatio } from "@chakra-ui/react";
 import Modal from "../../global/Modal";
 import useResponsive from "../../../hooks/useResponsive";
-import Box from "../../global/Box";
-import BgImage from "../../global/BgImage";
+import Image from "../../global/Image";
+import imageError from "../../../assets/image_error.png";
 
-/**
- *
- * @param {Object} props
- * @param {Boolean} props.isOpen state for check is modal detail of va is open
- * @param {(char:String)=>void} props.onOpenVA handler for open modal va
- * @returns {Element}
- */
 const CharacterAnimeModal = ({ isOpen, onClose, charactersSelected }) => {
   const { sm } = useResponsive();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
-      <CardData
-        useDefault
-        header={
-          <Heading as="h3" textAlign="center">
-            {charactersSelected?.name?.full}
-          </Heading>
-        }
-      >
+      <Stack spacing={8} py={4}>
+        <Heading as="h3" size="lg" textAlign="center" fontWeight="900" letterSpacing="tight">
+          {charactersSelected?.name?.full}
+        </Heading>
+
         {charactersSelected?.voiceActors?.length > 0 ? (
-          <SimpleGrid columns={sm ? 2 : 3} spacing={5}>
-            {charactersSelected?.voiceActors?.map((va) => (
-              <Box key={va?.id}>
-                <BgImage
-                  src={va?.image}
-                  w={120}
-                  h={120}
-                  m="auto"
-                  borderRadius="full"
-                />
-                <Text textAlign="center">{va?.name?.full}</Text>
-                <Text textAlign="center">{va?.language}</Text>
-              </Box>
+          <SimpleGrid columns={{ base: 2, md: 3 }} spacing={8}>
+            {charactersSelected.voiceActors.map((va) => (
+              <Stack key={va.id} spacing={4} alignItems="center">
+                <Box borderRadius="full" overflow="hidden" w="120px" h="120px" border="2px solid" borderColor="brand.500">
+                  <AspectRatio ratio={1}>
+                    <Image
+                      src={va.image}
+                      alt={va.name?.full}
+                      fallbackSrc={imageError}
+                      objectFit="cover"
+                    />
+                  </AspectRatio>
+                </Box>
+                <Stack spacing={0} textAlign="center">
+                  <Text fontWeight="bold" fontSize="sm" color="white">
+                    {va.name?.full}
+                  </Text>
+                  <Text fontSize="xs" color="gray.500" fontWeight="600">
+                    {va.language}
+                  </Text>
+                </Stack>
+              </Stack>
             ))}
           </SimpleGrid>
         ) : (
-          <Alert status="info">No Information About Voice Actors</Alert>
+          <Alert status="info" borderRadius="md" bg="rgba(255, 255, 255, 0.05)" color="white" border="1px solid rgba(255,255,255,0.1)">
+            No information about voice actors available.
+          </Alert>
         )}
-      </CardData>
+      </Stack>
     </Modal>
   );
 };
+
 export default CharacterAnimeModal;

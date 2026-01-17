@@ -13,12 +13,10 @@ RUN npm ci --only=production=false
 COPY . .
 
 # Build arguments for environment variables
-ARG VITE_API_BASE_URL
-ARG VITE_ANIME_PROVIDER
+ARG VITE_TMDB_TOKEN
 
 # Set environment variables for build
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
-ENV VITE_ANIME_PROVIDER=${VITE_ANIME_PROVIDER}
+ENV VITE_TMDB_TOKEN=${VITE_TMDB_TOKEN}
 
 # Build the application
 RUN npm run build
@@ -45,20 +43,20 @@ RUN echo 'server { \
     \
     # Handle React Router - all routes go to index.html \
     location / { \
-        try_files $uri $uri/ /index.html; \
+    try_files $uri $uri/ /index.html; \
     } \
     \
     # Cache static assets \
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ { \
-        expires 1y; \
-        add_header Cache-Control "public, immutable"; \
+    expires 1y; \
+    add_header Cache-Control "public, immutable"; \
     } \
     \
     # Security headers \
     add_header X-Frame-Options "SAMEORIGIN" always; \
     add_header X-Content-Type-Options "nosniff" always; \
     add_header X-XSS-Protection "1; mode=block" always; \
-}' > /etc/nginx/conf.d/default.conf
+    }' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

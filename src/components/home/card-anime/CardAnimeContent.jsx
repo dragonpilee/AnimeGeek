@@ -1,63 +1,72 @@
-import { Heading, Tooltip, Box, keyframes } from "@chakra-ui/react";
+import { Box, AspectRatio, Text } from "@chakra-ui/react";
 import { useMemo } from "react";
 import Image from "../../global/Image";
-
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
+import useResponsive from "../../../hooks/useResponsive";
+import imageError from "../../../assets/image_error.png";
 
 const CardAnimeContent = ({ data }) => {
+  const { sm } = useResponsive();
+
   const title = useMemo(() => {
     return data?.name || data?.title || "Unknown Title";
   }, [data]);
 
-  const imageUrl = useMemo(() => {
+  const images = useMemo(() => {
     if (data?.poster_path) {
       return `https://image.tmdb.org/t/p/w500${data.poster_path}`;
     }
-    return data?.image || ""; // Fallback
+    return data?.image || imageError;
   }, [data]);
 
   return (
-    <Box
-      position="relative"
-      overflow="hidden"
-      borderRadius="8px"
-      animation={`${fadeIn} 0.4s ease-out`}
-    >
-      <Image
-        src={imageUrl}
-        w="100%"
-        h={{ base: "240px", sm: "260px", md: "280px", lg: "300px" }}
-        objectFit="cover"
-        transition="transform 0.3s ease"
-        _groupHover={{ transform: "scale(1.05)" }}
-      />
+    <Box position="relative" overflow="hidden">
+      {/* Background/Poster Image */}
+      <AspectRatio ratio={2 / 3}>
+        <Image
+          src={images}
+          alt={title}
+          fallbackSrc={imageError}
+          objectFit="cover"
+          transition="all 0.5s ease"
+          _groupHover={{ transform: "scale(1.1)" }}
+        />
+      </AspectRatio>
+
+      {/* Hover Overlay */}
       <Box
         position="absolute"
-        bottom={0}
+        top={0}
         left={0}
         right={0}
-        bg="linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)"
-        p={{ base: 2, md: 3 }}
-        transition="all 0.3s"
+        bottom={0}
+        bg="linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 30%, transparent 100%)"
+        opacity={0}
+        transition="all 0.3s ease"
+        _groupHover={{ opacity: 1 }}
+        display="flex"
+        flexDirection="column"
+        justifyContent="flex-end"
+        p={4}
       >
-        <Tooltip {...(title?.length > 30 && { label: title })}>
-          <Heading
-            as="h3"
-            size="sm"
-            noOfLines={2}
-            color="white"
-            fontWeight="600"
-            transition="color 0.2s"
-            _groupHover={{ color: "brand.400" }}
-          >
-            {title}
-          </Heading>
-        </Tooltip>
+        <Text
+          color="white"
+          fontSize="sm"
+          fontWeight="bold"
+          noOfLines={2}
+          className="text-shadow"
+          transition="color 0.2s"
+          _groupHover={{ color: "brand.300" }}
+        >
+          {title}
+        </Text>
+        {data.vote_average && (
+          <Text color="brand.500" fontSize="xs" fontWeight="bold" mt={1}>
+            ★ {data.vote_average.toFixed(1)}
+          </Text>
+        )}
       </Box>
     </Box>
   );
 };
+
 export default CardAnimeContent;

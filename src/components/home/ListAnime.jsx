@@ -15,22 +15,17 @@ import useProvider from "../../hooks/useProvider";
 
 const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
   const { sm } = useResponsive();
-
   const navigate = useNavigate();
-
   const [page, setPage] = useSearchParams();
-
   const [newPage, setNewPage] = useState(0);
 
   const pageValue = useMemo(() => {
     return page.get("page");
   }, [page]);
 
-  // Construct API path
   const apiPath = useMemo(() => {
     const separator = path.includes("?") ? "&" : "?";
     const pageParam = pageValue ? `${separator}page=${pageValue}` : "";
-
     return `${path}${pageParam}`;
   }, [path, pageValue]);
 
@@ -50,43 +45,42 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
   }, [location?.search]);
 
   return (
-    <Stack spacing={6} direction="column">
-      <Stack
-        direction={{ base: "column", sm: "row" }}
-        alignItems={{ base: "flex-start", sm: "center" }}
+    <Stack spacing={4} direction="column" w="full" maxW="1600px" mx="auto">
+      <Flex
+        alignItems="flex-end"
         justifyContent="space-between"
-        spacing={{ base: 2, sm: 0 }}
+        px={{ base: 2, sm: 4 }}
       >
-        <Stack direction="row" alignItems="center">
-          {!useExploreMore && (
-            <IconButton
-              borderRadius={"full"}
-              icon={<HomeIcon />}
-              colorScheme="brand"
-              variant="ghost"
-              size={{ base: "sm", md: "md" }}
-              onClick={() => navigate("/")}
-            />
-          )}
+        <Stack spacing={0}>
           <Text
             as="h2"
-            fontSize={{ base: "lg", sm: "xl", md: "2xl", lg: "3xl" }}
-            fontWeight="bold"
+            fontSize={{ base: "xl", md: "3xl" }}
+            fontWeight="900"
+            letterSpacing="tight"
+            className="text-shadow"
+            color="white"
           >
             {titlePage}
           </Text>
+          <Box h="2px" w="40px" bg="brand.500" borderRadius="full" />
         </Stack>
         {useExploreMore && (
-          <IconButton
+          <Button
             onClick={() => navigate(path)}
-            colorScheme="brand"
-            aria-label="View All"
-            size={{ base: "sm", md: "md" }}
             variant="ghost"
-            icon={<ArrowForwardIcon />}
-          />
+            size="sm"
+            color="gray.400"
+            _hover={{ color: "brand.500", bg: "transparent" }}
+            rightIcon={<ArrowForwardIcon />}
+            fontWeight="bold"
+            fontSize="xs"
+            letterSpacing="widest"
+          >
+            SEE ALL
+          </Button>
         )}
-      </Stack>
+      </Flex>
+
       {error ? (
         <ErrorPage
           btnAction={{
@@ -100,7 +94,7 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
           src={imageError}
         />
       ) : (
-        <>
+        <Box position="relative">
           {loading ? (
             <Loading />
           ) : (
@@ -111,10 +105,9 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
                     {arrDatas?.map((item, key) => (
                       <Box
                         key={key}
-                        minW={{ base: "160px", sm: "180px", md: "200px", lg: "220px" }}
-                        maxW={{ base: "160px", sm: "180px", md: "200px", lg: "220px" }}
-                        transition="transform 0.2s"
-                        _hover={{ transform: "scale(1.02)" }}
+                        minW={{ base: "140px", sm: "160px", md: "180px", lg: "200px" }}
+                        maxW={{ base: "140px", sm: "160px", md: "180px", lg: "200px" }}
+                        px={1}
                       >
                         <CardAnime data={item} />
                       </Box>
@@ -135,11 +128,11 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
                   </div>
                 </>
               ) : (
-                <>No Data</>
+                <Text color="gray.500" textAlign="center" py={10}>No content found.</Text>
               )}
             </Stack>
           )}
-        </>
+        </Box>
       )}
     </Stack>
   );

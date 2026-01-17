@@ -108,7 +108,7 @@ const EpisodesAnimeStreamingModal = () => {
   return (
     <Modal
       header={
-        <Heading as="h3" fontSize="xl" textAlign="center">
+        <Heading as="h3" fontSize="xl" textAlign="center" fontWeight="900" letterSpacing="tight">
           {episodeName}
         </Heading>
       }
@@ -116,37 +116,33 @@ const EpisodesAnimeStreamingModal = () => {
       onClose={() => {
         setisOpenAlert(true);
       }}
-      size="xl"
+      size="6xl" // Larger player size
     >
       <Stack direction="column" spacing={5}>
-        {/* Always show video element - it will load when sources are available */}
         <Box
           position="relative"
           width="100%"
           bg="black"
-          borderRadius="8px"
+          borderRadius="lg"
           overflow="hidden"
-          minH="400px"
-          maxH="70vh"
+          boxShadow="0 20px 50px rgba(0,0,0,0.9)"
+          border="1px solid rgba(255,255,255,0.05)"
+          aspectRatio={16 / 9}
         >
           {vidkingUrl ? (
-            <Box width="100%" height="100%" minH="400px">
-              <iframe
-                src={vidkingUrl}
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                allowFullScreen
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  minHeight: "400px",
-                  borderRadius: "8px",
-                  backgroundColor: "#000"
-                }}
-                title="Vidking Player"
-              />
-            </Box>
+            <iframe
+              src={vidkingUrl}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allowFullScreen
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "#000"
+              }}
+              title="Vidking Player"
+            />
           ) : (
             <video
               ref={videoRef}
@@ -162,33 +158,30 @@ const EpisodesAnimeStreamingModal = () => {
               crossOrigin="anonymous"
             />
           )}
-          {(!vidkingUrl) && (
+
+          {!vidkingUrl && (
             <Stack
               position="absolute"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
+              inset={0}
               align="center"
               justify="center"
-              spacing={3}
+              spacing={4}
+              bg="black"
               zIndex={10}
             >
-              <Text color="white" fontSize="lg" fontWeight="semibold">
-                Loading video player...
-              </Text>
-              <Text color="gray.400" fontSize="sm">
-                Connecting to Vidking servers...
+              <Box className="loading-spinner" /> {/* Generic spinner for cinematic look */}
+              <Text color="brand.500" fontSize="lg" fontWeight="900" letterSpacing="widest">
+                PREPARING CINEMA...
               </Text>
             </Stack>
           )}
         </Box>
 
-        <EpisodesAnimeDownloadModal
-          isOpen={openModalDownload}
-          onClose={() => {
-            setOpenModalDownload(false);
-          }}
-        />
+        <Box px={4} pb={4}>
+          <Text fontSize="xs" color="gray.500" fontWeight="bold">
+            YOU ARE WATCHING: <Box as="span" color="white">{episodeName}</Box>
+          </Text>
+        </Box>
       </Stack>
 
       <AlertDialog

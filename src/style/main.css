@@ -1,11 +1,71 @@
+:root {
+  --glow-red: rgba(229, 9, 20, 0.15);
+  --glow-blue: rgba(0, 112, 243, 0.15);
+}
+
+body {
+  background-color: #000000;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Atmospheric Vignette */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+body::before {
+  top: -20vw;
+  right: -10vw;
+  background: radial-gradient(circle, var(--glow-red) 0%, transparent 70%);
+}
+
+body::after {
+  bottom: -20vw;
+  left: -10vw;
+  background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
+}
+
 body::-webkit-scrollbar {
-  width: 5px;
-  background-color: var(--chakra-colors-gray-800);
+  width: 8px;
+  background-color: #000;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #333;
   border-radius: 10px;
 }
-body::-webkit-scrollbar-thumb {
-  background-color: var(--chakra-colors-gray-400);
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #444;
 }
+
 .content {
-  padding: 20px 10px;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-blur {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.text-shadow {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.hero-gradient {
+  background: linear-gradient(to top, #000000 0%, transparent 100%);
 }

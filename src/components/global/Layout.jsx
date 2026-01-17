@@ -8,11 +8,11 @@ import {
   Flex,
   InputRightElement,
   IconButton,
+  Text,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
-import ProviderSelector from "./ProviderSelector";
 
 const Layout = ({ children }) => {
   const [search, setSearch] = useState("");
@@ -28,24 +28,24 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <Stack direction="column" spacing={0}>
+    <Box minH="100vh" bg="black" position="relative">
+      {/* Floating Glass Navbar */}
       <Box
-        position="sticky"
+        position="fixed"
         top={0}
-        zIndex={99}
-        bg="dark.bgAlt"
-        borderBottom="1px solid"
-        borderColor="dark.border"
-        boxShadow="0 2px 8px rgba(0,0,0,0.3)"
+        left={0}
+        right={0}
+        zIndex={1000}
+        className="glass-blur"
+        px={{ base: 4, md: 8 }}
+        py={3}
       >
         <Flex
-          maxW="1400px"
+          maxW="1600px"
           mx="auto"
-          px={6}
-          py={4}
           alignItems="center"
-          gap={6}
-          direction={{ base: "column", md: "row" }}
+          justifyContent="space-between"
+          gap={8}
         >
           <Heading
             as="h1"
@@ -53,58 +53,83 @@ const Layout = ({ children }) => {
             cursor="pointer"
             onClick={() => navigate("/")}
             color="brand.500"
-            fontWeight="700"
-            letterSpacing="tight"
-            _hover={{ color: "brand.400" }}
-            transition="color 0.2s"
-            whiteSpace="nowrap"
+            fontWeight="900"
+            letterSpacing="tighter"
+            _hover={{ transform: "scale(1.02)" }}
+            transition="all 0.2s"
+            className="text-shadow"
           >
-            AnimeGeek
+            CINEBY <Box as="span" color="white" fontWeight="300" fontSize="md" ml={1}>ANIME</Box>
           </Heading>
-          <Box flex="1" w="full">
-            <InputGroup size="lg">
-              <InputLeftElement>
-                <SearchIcon color="brand.500" />
+
+          <Box flex="1" maxW="600px" display={{ base: "none", md: "block" }}>
+            <InputGroup size="md">
+              <InputLeftElement pointerEvents="none">
+                <SearchIcon color="gray.500" />
               </InputLeftElement>
               <Input
                 type="search"
-                placeholder="Search for anime..."
-                bg="dark.surface"
-                border="2px solid"
-                borderColor="dark.border"
-                fontSize="md"
-                _hover={{ borderColor: "brand.500" }}
+                placeholder="Search movies or TV shows"
+                bg="rgba(255, 255, 255, 0.05)"
+                border="1px solid rgba(255, 255, 255, 0.1)"
+                borderRadius="full"
+                _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
                 _focus={{
+                  bg: "rgba(255, 255, 255, 0.1)",
                   borderColor: "brand.500",
-                  boxShadow: "0 0 0 1px var(--chakra-colors-brand-500)",
+                  boxShadow: "none",
                 }}
                 onChange={({ target: { value } }) => setSearch(value)}
                 onKeyUp={(e) => {
-                  if (e?.code === "Enter" || e?.key === "Enter") {
-                    searchHandler();
-                  }
+                  if (e?.key === "Enter") searchHandler();
                 }}
               />
-              <InputRightElement>
-                <IconButton
-                  icon={<SearchIcon />}
-                  size="sm"
-                  colorScheme="brand"
-                  variant="ghost"
-                  onClick={searchHandler}
-                  aria-label="Search"
-                />
-              </InputRightElement>
             </InputGroup>
           </Box>
+
+          <Flex gap={6} alignItems="center">
+            <Text
+              cursor="pointer"
+              fontWeight="600"
+              fontSize="sm"
+              _hover={{ color: "brand.500" }}
+              onClick={() => navigate("/")}
+            >
+              Home
+            </Text>
+            <Text
+              cursor="pointer"
+              fontWeight="600"
+              fontSize="sm"
+              _hover={{ color: "brand.500" }}
+              onClick={() => navigate("/search")}
+            >
+              Browse
+            </Text>
+            <IconButton
+              display={{ base: "flex", md: "none" }}
+              icon={<SearchIcon />}
+              variant="ghost"
+              onClick={() => navigate("/search")}
+              aria-label="Search"
+              color="white"
+            />
+          </Flex>
         </Flex>
       </Box>
-      <Box className="content" minH="100vh" px={6} py={8}>
-        <Box maxW="1400px" mx="auto">
-          {children}
-        </Box>
+
+      {/* Main Content */}
+      <Box pt="80px">
+        {children}
       </Box>
-    </Stack>
+
+      {/* Footer (Optional, but good for space) */}
+      <Box py={10} textAlign="center" borderTop="1px solid rgba(255, 255, 255, 0.05)">
+        <Text color="gray.500" fontSize="xs">
+          © {new Date().getFullYear()} CINEBY ANIME. All rights reserved.
+        </Text>
+      </Box>
+    </Box>
   );
 };
 export default Layout;

@@ -12,23 +12,33 @@ const CharacterAnime = ({ data }) => {
     return data?.characters?.find((char) => char?.id === idChar);
   }, [idChar]);
 
+  if (!data?.characters?.length) return null;
+
   return (
-    <CardData useDefault header={<Heading>Characters</Heading>}>
-      <CharacterAnimeList
-        data={data}
-        onOpenVA={(char) => {
-          setIdChar(char?.id);
-          setIsOpenVA(true);
-        }}
-      />
-      <CharacterAnimeModal
-        charactersSelected={charactersSelected}
-        isOpen={isOpenVA}
-        onClose={() => {
-          setIsOpenVA(false);
-        }}
-      />
-    </CardData>
+    <Stack spacing={6} maxW="1600px" mx="auto" px={{ base: 6, md: 12 }} pt={10}>
+      <Stack spacing={1}>
+        <Heading as="h2" size="xl" fontWeight="900" letterSpacing="tight">
+          CHARACTERS
+        </Heading>
+        <Box h="2px" w="40px" bg="brand.500" borderRadius="full" />
+      </Stack>
+      <Box mt={4}>
+        <CharacterAnimeList
+          data={data}
+          onOpenVA={(char) => {
+            setIdChar(char?.id);
+            setIsOpenVA(true);
+          }}
+        />
+        <CharacterAnimeModal
+          charactersSelected={charactersSelected}
+          isOpen={isOpenVA}
+          onClose={() => {
+            setIsOpenVA(false);
+          }}
+        />
+      </Box>
+    </Stack>
   );
 };
 export default CharacterAnime;
