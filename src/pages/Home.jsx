@@ -7,9 +7,9 @@ const Home = () => {
 
   return (
     <VStack spacing={10}>
-      <ListAnime titlePage="Trending" path="/trending" useExploreMore />
-      <ListAnime titlePage="Popular" path="/popular" useExploreMore />
-      <ListAnime titlePage="Upcoming" path="/upcoming" useExploreMore />
+      <ListAnime titlePage="Trending" path="/trending/tv/day" useExploreMore />
+      <ListAnime titlePage="Popular" path="/tv/popular" useExploreMore />
+      <ListAnime titlePage="Top Rated" path="/tv/top_rated" useExploreMore />
     </VStack>
   );
 };

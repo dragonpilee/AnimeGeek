@@ -21,6 +21,7 @@ const EpisodesAnimeStreamingModal = () => {
     videoRef,
     closeModalVideo,
     dataStream,
+    vidkingUrl,
     hlsInstance,
   } = useEpisodeAnimeContext();
 
@@ -128,77 +129,66 @@ const EpisodesAnimeStreamingModal = () => {
           minH="400px"
           maxH="70vh"
         >
-          <video 
-            ref={videoRef} 
-            controls 
-            style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: "#000",
-              display: "block"
-            }}
-            playsInline
-            preload="metadata"
-            crossOrigin="anonymous"
-          />
-          {(!dataStream?.sources || dataStream.sources.length === 0) && (
-            <Stack 
+          {vidkingUrl ? (
+            <Box width="100%" height="100%" minH="400px">
+              <iframe
+                src={vidkingUrl}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                allowFullScreen
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  minHeight: "400px",
+                  borderRadius: "8px",
+                  backgroundColor: "#000"
+                }}
+                title="Vidking Player"
+              />
+            </Box>
+          ) : (
+            <video
+              ref={videoRef}
+              controls
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "#000",
+                display: "block"
+              }}
+              playsInline
+              preload="metadata"
+              crossOrigin="anonymous"
+            />
+          )}
+          {(!vidkingUrl) && (
+            <Stack
               position="absolute"
               top="50%"
               left="50%"
               transform="translate(-50%, -50%)"
-              align="center" 
+              align="center"
               justify="center"
               spacing={3}
               zIndex={10}
             >
-              {dataStream?.error ? (
-                <>
-                  <Text color="red.300" fontSize="lg" fontWeight="bold">Error Loading Stream</Text>
-                  <Text color="gray.300" fontSize="sm" textAlign="center" px={4}>
-                    {dataStream.error}
-                  </Text>
-                  <Text color="gray.400" fontSize="xs" textAlign="center" px={4} mt={2}>
-                    Trying other providers automatically...
-                  </Text>
-                </>
-              ) : (
-                <>
-                  <Text color="white" fontSize="lg">Loading video player...</Text>
-                  <Text color="gray.300" fontSize="sm">Fetching stream sources...</Text>
-                </>
-              )}
+              <Text color="white" fontSize="lg" fontWeight="semibold">
+                Loading video player...
+              </Text>
+              <Text color="gray.400" fontSize="sm">
+                Connecting to Vidking servers...
+              </Text>
             </Stack>
           )}
         </Box>
-        <Stack direction="row" spacing={5}>
-          {audioTracks.length > 1 && (
-            <Select
-              placeholder="Audio"
-              listOptions={audioTracks}
-              onChange={handleAudioChange}
-            />
-          )}
-          {subtitleTracks.length > 0 && (
-            <Select
-              placeholder="Subtitles"
-              listOptions={subtitleTracks}
-              onChange={handleSubtitleChange}
-            />
-          )}
-          <Select
-            placeholder="Choose Quality"
-            listOptions={listQualityStreaming}
-            onChange={changeQualityHandler}
-          />
-          <Button
-            onClick={() => {
-              setOpenModalDownload(true);
-            }}
-          >
-            Download
-          </Button>
-        </Stack>
+
+        <EpisodesAnimeDownloadModal
+          isOpen={openModalDownload}
+          onClose={() => {
+            setOpenModalDownload(false);
+          }}
+        />
       </Stack>
 
       <AlertDialog
@@ -208,13 +198,6 @@ const EpisodesAnimeStreamingModal = () => {
         }}
         onOk={() => {
           closeModalVideo();
-        }}
-      />
-
-      <EpisodesAnimeDownloadModal
-        isOpen={openModalDownload}
-        onClose={() => {
-          setOpenModalDownload(false);
         }}
       />
     </Modal>

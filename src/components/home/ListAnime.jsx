@@ -15,7 +15,6 @@ import useProvider from "../../hooks/useProvider";
 
 const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
   const { sm } = useResponsive();
-  const { currentProvider } = useProvider();
 
   const navigate = useNavigate();
 
@@ -27,15 +26,13 @@ const ListAnime = ({ titlePage, path, useExploreMore = false }) => {
     return page.get("page");
   }, [page]);
 
-  // Construct API path with provider parameter
+  // Construct API path
   const apiPath = useMemo(() => {
     const separator = path.includes("?") ? "&" : "?";
-    const providerParam = `provider=${currentProvider}`;
-    const pageParam = pageValue ? `&page=${pageValue}` : "";
-    
-    // Add provider parameter and page if needed
-    return `${path}${separator}${providerParam}${pageParam}`;
-  }, [path, pageValue, currentProvider]);
+    const pageParam = pageValue ? `${separator}page=${pageValue}` : "";
+
+    return `${path}${pageParam}`;
+  }, [path, pageValue]);
 
   const { data, loading, error, refetch } = useFetchData(apiPath);
 

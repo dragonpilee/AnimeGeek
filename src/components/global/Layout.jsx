@@ -97,7 +97,6 @@ const Layout = ({ children }) => {
               </InputRightElement>
             </InputGroup>
           </Box>
-          <ProviderSelector showLabel={false} size="md" />
         </Flex>
       </Box>
       <Box className="content" minH="100vh" px={6} py={8}>

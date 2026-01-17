@@ -14,7 +14,7 @@ const Search = () => {
   return (
     <ListAnime
       titlePage={`Search : ${searchVal}`}
-      path={`/search?query=${encodeURIComponent(searchVal || "")}`}
+      path={`/search/tv?query=${encodeURIComponent(searchVal || "")}`}
       useExploreMore={false}
     />
   );

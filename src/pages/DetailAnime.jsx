@@ -33,9 +33,33 @@ const TitleAnime = lazy(() =>
 const DetailAnime = () => {
   const { id, anime_name } = useParams();
   const { state, pathname } = useLocation();
-  const { currentProvider } = useProvider();
 
-  const { data: detailData, loading } = useFetchData(`/info/${id}?fetchFiller=true&dub=false&provider=${currentProvider}`);
+  // For TMDB, we usually want to know if it's a TV show or Movie. 
+  // For now, assume TV as it's the most common for anime list, but we can detect or default.
+  const { data: detailData, loading } = useFetchData(`/tv/${id}?append_to_response=recommendations,credits,similar`);
+
+  // Map TMDB fields to component expectations
+  const mappedData = useMemo(() => {
+    if (!detailData) return null;
+    return {
+      ...detailData,
+      title: { romaji: detailData.name || detailData.title },
+      image: detailData.poster_path ? `https://image.tmdb.org/t/p/w500${detailData.poster_path}` : null,
+      cover: detailData.backdrop_path ? `https://image.tmdb.org/t/p/original${detailData.backdrop_path}` : null,
+      description: detailData.overview,
+      characters: detailData.credits?.cast?.map(c => ({
+        id: c.id,
+        name: { full: c.name },
+        image: c.profile_path ? `https://image.tmdb.org/t/p/w200${c.profile_path}` : null,
+        role: c.character
+      })),
+      recommendations: detailData.recommendations?.results?.map(r => ({
+        id: r.id,
+        title: { romaji: r.name || r.title },
+        image: r.poster_path ? `https://image.tmdb.org/t/p/w300${r.poster_path}` : null
+      }))
+    };
+  }, [detailData]);
 
   useChangeDocTitle(`AnimeGeek | ${decodeURI(anime_name)}`);
 
@@ -63,11 +87,11 @@ const DetailAnime = () => {
       )}
 
       <Box useSuspense height={480}>
-        <CoverAnime src={detailData?.image} srcBg={detailData?.cover} />
+        <CoverAnime src={mappedData?.image} srcBg={mappedData?.cover} />
       </Box>
 
       <Box useSuspense>
-        <TitleAnime data={detailData} />
+        <TitleAnime data={mappedData} />
       </Box>
 
       {loading ? (
@@ -75,24 +99,24 @@ const DetailAnime = () => {
       ) : (
         <>
           <Box useSuspense>
-            <DescriptionAnime data={detailData} />
+            <DescriptionAnime data={mappedData} />
           </Box>
 
           {/* Always show Episodes component - it will handle empty state internally */}
           <Box useSuspense>
-            <EpisodesAnime data={detailData} />
+            <EpisodesAnime data={mappedData} />
           </Box>
 
-          <Box showIf={detailData?.relations?.length > 0} useSuspense>
-            <RelationsAnime data={detailData} />
+          <Box showIf={mappedData?.relations?.length > 0} useSuspense>
+            <RelationsAnime data={mappedData} />
           </Box>
 
-          <Box showIf={detailData?.characters?.length > 0} useSuspense>
-            <CharacterAnime data={detailData} />
+          <Box showIf={mappedData?.characters?.length > 0} useSuspense>
+            <CharacterAnime data={mappedData} />
           </Box>
 
-          <Box showIf={detailData?.recommendations?.length > 0} useSuspense>
-            <RecommendationAnime data={detailData} />
+          <Box showIf={mappedData?.recommendations?.length > 0} useSuspense>
+            <RecommendationAnime data={mappedData} />
           </Box>
         </>
       )}

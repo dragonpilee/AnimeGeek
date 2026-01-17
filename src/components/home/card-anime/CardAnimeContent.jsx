@@ -9,7 +9,14 @@ const fadeIn = keyframes`
 
 const CardAnimeContent = ({ data }) => {
   const title = useMemo(() => {
-    return data?.title?.romaji;
+    return data?.name || data?.title || "Unknown Title";
+  }, [data]);
+
+  const imageUrl = useMemo(() => {
+    if (data?.poster_path) {
+      return `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+    }
+    return data?.image || ""; // Fallback
   }, [data]);
 
   return (
@@ -20,7 +27,7 @@ const CardAnimeContent = ({ data }) => {
       animation={`${fadeIn} 0.4s ease-out`}
     >
       <Image
-        src={data?.image}
+        src={imageUrl}
         w="100%"
         h={{ base: "240px", sm: "260px", md: "280px", lg: "300px" }}
         objectFit="cover"

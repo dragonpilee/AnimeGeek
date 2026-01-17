@@ -9,12 +9,12 @@ const CardAnime = ({ data }) => {
   const { pathname, search } = useLocation();
 
   const title = useMemo(() => {
-    return data?.title?.romaji;
+    return data?.name || data?.title || "Unknown Title";
   }, [data]);
 
   return (
     <Link
-      to={`/anime/${data?.id}/${title}`}
+      to={`/anime/${data?.id}/${encodeURIComponent(title)}`}
       state={{
         prevPath: `${pathname}${search}`,
       }}

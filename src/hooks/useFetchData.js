@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { BASE_API } from "../constants";
+import { TMDB_BASE_URL, TMDB_TOKEN } from "../constants";
 
 const useFetchData = (path) => {
   const [state, setState] = useState({
@@ -22,8 +22,19 @@ const useFetchData = (path) => {
       ...prev,
       loading: true,
     }));
+
+    // If path starts with /, it's a relative path to TMDB or local API
+    // If it starts with http, it's an absolute URL
+    const url = path.startsWith("http") ? path : `${TMDB_BASE_URL}${path}`;
+
+    const headers = {};
+    if (url.includes("themoviedb.org")) {
+      headers["Authorization"] = `Bearer ${TMDB_TOKEN}`;
+      headers["Content-Type"] = "application/json";
+    }
+
     axios
-      .get(`${BASE_API}${path}`)
+      .get(url, { headers })
       ?.then(({ data }) => {
         if (data) {
           setState((prev) => ({
